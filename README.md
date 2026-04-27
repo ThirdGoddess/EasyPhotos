@@ -5,7 +5,19 @@
 
 # 依赖
 ```java
+dependencyResolutionManagement {
+		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+		repositories {
+			mavenCentral()
+			maven { url 'https://jitpack.io' }
+		}
+}
+```
 
+```java
+dependencies {
+	        implementation 'com.github.ThirdGoddess:EasyPhotos:v3.1.6'
+}
 ```
 
 ---

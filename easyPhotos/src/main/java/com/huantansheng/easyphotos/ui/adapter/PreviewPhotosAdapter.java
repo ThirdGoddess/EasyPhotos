@@ -1,7 +1,11 @@
 package com.huantansheng.easyphotos.ui.adapter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Build;
@@ -11,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +31,7 @@ import com.huantansheng.easyphotos.setting.Setting;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 大图预览界面图片集合的适配器
@@ -124,14 +131,20 @@ public class PreviewPhotosAdapter extends RecyclerView.Adapter<PreviewPhotosAdap
     }
 
     private void toPlayVideo(View v, Uri uri, String type) {
-        Context context = v.getContext();
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        }
         intent.setDataAndType(uri, type);
-        context.startActivity(intent);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        List<ResolveInfo> resInfoList = v.getContext().getPackageManager()
+                .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            v.getContext().grantUriPermission(packageName, uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+
+        v.getContext().startActivity(intent);
     }
 
     private Uri getUri(Context context, String path, Intent intent) {

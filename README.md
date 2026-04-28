@@ -16,7 +16,7 @@ dependencyResolutionManagement {
 
 ```java
 dependencies {
-	        implementation 'com.github.ThirdGoddess:EasyPhotos:v3.1.6'
+	        implementation 'com.github.ThirdGoddess:EasyPhotos:v3.1.7'
 }
 ```
 
